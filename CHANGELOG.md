@@ -1,3 +1,12 @@
+## [2026-02-02] [Feature] iOS 订阅管理原生弹窗适配 (StoreKit 2)
+- **Summary**: 实现 iOS 端跳转至系统订阅管理页面的功能，并适配 iOS 15+ 原生弹窗效果。
+- **Core Change**: 
+  - 引入 `IapManager.swift` 助手类以调用 StoreKit 2 的 `AppStore.showManageSubscriptions`。
+  - 在 `FlutterInappPurchasePlugin.m` 中实现混编调用，并保留低版本 URL 回退逻辑。
+  - 更新 `podspec` 以支持 Swift 5.0。
+- **Evidence**:
+  - 📂 **Full Context**: [查看完整施工方案](./docs/archive/2026/02/show_manage_subscriptions/plan.md)
+
 ## 5.6.1
 * Erroneous duplicate item by @deakjahn in https://github.com/dooboolab-community/flutter_inapp_purchase/pull/441
 * Fixed consumable products reading on Android by @33-Elephants in https://github.com/dooboolab-community/flutter_inapp_purchase/pull/439

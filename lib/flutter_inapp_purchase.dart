@@ -144,6 +144,12 @@ class FlutterInappPurchase {
     return Future.value(Store.none);
   }
 
+  Future<void> showManageSubscriptionsIOS() async {
+    if (_platform.isIOS) {
+      await _channel.invokeMethod('showManageSubscriptions');
+    }
+  }
+
   /// Retrieves a list of products from the store on `Android` and `iOS`.
   ///
   /// `iOS` also returns subscriptions.

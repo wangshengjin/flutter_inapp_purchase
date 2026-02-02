@@ -2,6 +2,12 @@
 
 #import <IAPPromotionObserver.h>
 
+#if __has_include("flutter_inapp_purchase-Swift.h")
+#import "flutter_inapp_purchase-Swift.h"
+#else
+#import <flutter_inapp_purchase/flutter_inapp_purchase-Swift.h>
+#endif
+
 @interface FlutterInappPurchasePlugin() {
     SKPaymentTransaction *currentTransaction;
     FlutterResult flutterResult;
@@ -245,6 +251,8 @@
 #endif
         result(@"the functionality is available starting from ios 14.0");
 
+    } else if ([@"showManageSubscriptions" isEqualToString:call.method]) {
+        [self showManageSubscriptions:result];
     } else {
         result(FlutterMethodNotImplemented);
     }
@@ -753,6 +761,40 @@
             receiptBlock(nil, error);
         }
         receiptBlock = nil;
+    }
+}
+
+/**
+ * 拉起 iOS 系统订阅管理页面
+ * 优先尝试 iOS 15+ 的原生弹窗 (StoreKit 2)，失败或低版本则回退到网页跳转
+ */
+- (void)showManageSubscriptions:(FlutterResult)result {
+    if (@available(iOS 15.0, *)) {
+        [[IapManager shared] showManageSubscriptionsWithCompletion:^(BOOL success) {
+            if (success) {
+                result(@"Success");
+            } else {
+                // 如果原生弹窗失败，尝试回退到 URL 方案
+                [self openSubscriptionsURL:result];
+            }
+        }];
+    } else {
+        [self openSubscriptionsURL:result];
+    }
+}
+
+- (void)openSubscriptionsURL:(FlutterResult)result {
+    NSURL *url = [NSURL URLWithString:@"https://apps.apple.com/account/subscriptions"];
+    if ([[UIApplication sharedApplication] canOpenURL:url]) {
+        [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:^(BOOL success) {
+            if (success) {
+                result(@"Success");
+            } else {
+                result([FlutterError errorWithCode:@"E_URL_OPEN_FAILED" message:@"Could not open subscriptions URL" details:nil]);
+            }
+        }];
+    } else {
+        result([FlutterError errorWithCode:@"E_URL_OPEN_FAILED" message:@"Could not open subscriptions URL" details:nil]);
     }
 }
 

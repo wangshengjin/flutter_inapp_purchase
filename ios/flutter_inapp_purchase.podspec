@@ -17,5 +17,6 @@ In App Purchase plugin for flutter. This project has been forked by react-native
   s.dependency 'Flutter'
   
   s.ios.deployment_target = '8.0'
+  s.swift_version = '5.0'
 end
 
