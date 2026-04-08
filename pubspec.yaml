@@ -27,9 +27,5 @@ dev_dependencies:
 flutter:
   plugin:
     platforms:
-      android:
-        package: com.dooboolab.flutterinapppurchase
-        pluginClass: FlutterInappPurchasePlugin2
-        mainClass: FlutterInappPurchasePlugin2
       ios:
         pluginClass: FlutterInappPurchasePlugin
